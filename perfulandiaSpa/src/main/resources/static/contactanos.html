@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de Contacto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Encabezado con fondo */
+    .header {
+      background-color: #5a376e;
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    /* Botón de volver atrás */
+    .volver-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: white;
+      color: #444;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .volver-btn:hover {
+      background-color: #eee;
+    }
+
+    /* Contenedor general */
+    .container {
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    /* Estilos del formulario */
+    form input, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+
+    /* Info de contacto al costado */
+    .info {
+      margin-top: 20px;
+    }
+
+    .info p {
+      margin: 5px 0;
+    }
+
+    #btnEnviar {
+      background-color: #5a376e;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    #btnEnviar:hover {
+      background-color: #6d4294;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sección del encabezado -->
+  <div class="header">
+    <!-- Botón para volver atrás -->
+    <a href="javascript:history.back()" class="volver-btn">← Volver atrás</a>
+    <h1>CONTACTANOS</h1>
+    <p>¿Necesitas ayuda? Contactanos aquí ✉️📞</p>
+  </div>
+
+  <!-- Sección del contenido -->
+  <div class="container">
+    <!-- Formulario -->
+    <form id="formContacto">
+      <label>Nombre *</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label>Correo electrónico *</label>
+      <input type="email" id="email" name="email" required>
+
+      <label>Mensaje *</label>
+      <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+
+       <div class="boton">
+        <button type="button" id="btnEnviar">Enviar</button>
+      </div>
+    </form>
+
+    <!-- Información de contacto -->
+    <div class="info">
+      <p><strong>Dirección:</strong></p>
+      <p>Local Numero 13</p>
+      <p>Barrio Meiggs, Nro #6666</p>
+
+      <p><strong>Correo:</strong> PerfulandiaSpa@hotmail.com</p>
+      <p><strong>Teléfono:</strong> +56983053466</p>
+    </div>
+
+  <script>
+    document.getElementById('btnEnviar').addEventListener('click', function() {
+      // Validar campos antes de enviar
+      if (!document.getElementById('nombre').value || 
+          !document.getElementById('email').value || 
+          !document.getElementById('mensaje').value) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+      }
+
+      const contacto = {
+        nombre: document.getElementById('nombre').value,
+        email: document.getElementById('email').value,
+        mensaje: document.getElementById('mensaje').value
+      };
+
+      fetch('http://localhost:8080/api/v2/contactos/enviar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contacto)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert('¡Mensaje enviado con éxito!');
+        document.getElementById('formContacto').reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ocurrió un error al enviar el mensaje. Por favor intente nuevamente.');
+      });
+    });
+  </script>
+</body>
+</html>
